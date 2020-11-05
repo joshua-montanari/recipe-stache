@@ -8,15 +8,17 @@ const Recipe = require('../models/Recipe');
 // @access Public
 router.post('/', (req, res) => {
 
-    const { recipeName, recipeSteps } = req.body;
+    const { name, steps, category, ingredients } = req.body;
 
     const newRecipe = new Recipe({
-        recipeName: recipeName,
-        recipeSteps: recipeSteps,
+        name: name,
+        steps: steps,
+        category: category,
+        ingredients: ingredients,
     });
     newRecipe.save()
         .then(recipe => res.status(201).json(recipe))
-        .catch(err => res.status(404).json(err));
+        .catch(err => res.status(400).json(err.message));
 });
 
 // @route GET /recipes
@@ -25,7 +27,7 @@ router.post('/', (req, res) => {
 router.get('/', (req, res) => {
     Recipe.find()
         .then(recipes => res.status(200).json(recipes))
-        .catch(err => res.status(404).json(err));
+        .catch(err => res.status(400).json(err.message));
 });
 
 // @route GET /recipes/:id
@@ -37,7 +39,7 @@ router.get('/:id', (req, res) => {
             if(recipe === null) { return res.status(404).json({error: 'Could not find recipe!'}) }
             return res.status(200).json(recipe);
         })
-        .catch(err => res.status(404).json(err));
+        .catch(err => res.status(400).json(err.message));
 });
 
 // @route PUT /recipes/:id
@@ -47,9 +49,9 @@ router.put('/:id', (req, res) => {
     Recipe.findByIdAndUpdate(req.params.id, {$set: req.body}, {new: true, useFindAndModify: false})
         .then(recipe => {
             if(recipe === null) { return res.status(404).json({error: 'Could not locate recipe to update!'}) }
-            return res.status(201).json(recipe);
+            return res.status(200).json(recipe);
         })
-        .catch(err => res.status(404).json(err));
+        .catch(err => res.status(400).json(err.message));
 });
 
 // @route DELETE /recipes/:id
@@ -59,9 +61,9 @@ router.delete('/:id', (req, res) => {
     Recipe.findByIdAndDelete(req.params.id)
         .then(recipe => {
             if(recipe === null) { return res.status(404).json({ error: 'Could not locate recipe to delete!'}) }
-            return res.status(201).json(recipe);
+            return res.status(200).json(recipe);
         })
-        .catch(err => res.status(404).json(err));
+        .catch(err => res.status(400).json(err.message));
 });
 
 module.exports = router;
