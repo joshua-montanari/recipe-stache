@@ -6,7 +6,7 @@ const Recipe = require('../models/Recipe');
 // @route POST /recipes
 // @desc Creates new recipe
 // @access Public TODO: make private
-router.post('/', (req, res) => {
+router.post('/', async (req, res) => {
 
     const { name, steps, category, ingredients } = req.body;
 
@@ -24,7 +24,7 @@ router.post('/', (req, res) => {
 // @route GET /recipes
 // @desc Returns all recipes
 // @access Public
-router.get('/', (req, res) => {
+router.get('/', async (req, res) => {
     Recipe.find()
         .then(recipes => res.status(200).json(recipes))
         .catch(err => res.status(400).json(err.message));
@@ -33,7 +33,7 @@ router.get('/', (req, res) => {
 // @route GET /recipes/:id
 // @desc Returns recipe specified by id
 // @access Public
-router.get('/:id', (req, res) => {
+router.get('/:id', async (req, res) => {
     Recipe.findById(req.params.id)
         .then(recipe => {
             if(recipe === null) { return res.status(404).json({error: 'Could not find recipe!'}) }
@@ -45,7 +45,7 @@ router.get('/:id', (req, res) => {
 // @route PUT /recipes/:id
 // @desc Updates recipe specified by id
 // @access Public TODO: make private
-router.put('/:id', (req, res) => {
+router.put('/:id', async (req, res) => {
     Recipe.findByIdAndUpdate(req.params.id, {$set: req.body}, {new: true, useFindAndModify: false})
         .then(recipe => {
             if(recipe === null) { return res.status(404).json({error: 'Could not locate recipe to update!'}) }
@@ -57,7 +57,7 @@ router.put('/:id', (req, res) => {
 // @route DELETE /recipes/:id
 // @desc Deletes recipe specified by id
 // @access Public TODO: make private
-router.delete('/:id', (req, res) => {
+router.delete('/:id', async (req, res) => {
     Recipe.findByIdAndDelete(req.params.id)
         .then(recipe => {
             if(recipe === null) { return res.status(404).json({ error: 'Could not locate recipe to delete!'}) }
