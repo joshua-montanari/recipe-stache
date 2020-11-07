@@ -5,7 +5,7 @@ const Recipe = require('../models/Recipe');
 
 // @route POST /recipes
 // @desc Creates new recipe
-// @access Public
+// @access Public TODO: make private
 router.post('/', (req, res) => {
 
     const { name, steps, category, ingredients } = req.body;
@@ -44,7 +44,7 @@ router.get('/:id', (req, res) => {
 
 // @route PUT /recipes/:id
 // @desc Updates recipe specified by id
-// @access Public
+// @access Public TODO: make private
 router.put('/:id', (req, res) => {
     Recipe.findByIdAndUpdate(req.params.id, {$set: req.body}, {new: true, useFindAndModify: false})
         .then(recipe => {
@@ -56,7 +56,7 @@ router.put('/:id', (req, res) => {
 
 // @route DELETE /recipes/:id
 // @desc Deletes recipe specified by id
-// @access Public
+// @access Public TODO: make private
 router.delete('/:id', (req, res) => {
     Recipe.findByIdAndDelete(req.params.id)
         .then(recipe => {
