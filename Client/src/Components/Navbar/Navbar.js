@@ -16,13 +16,8 @@ export default class Navbar extends Component{
               <li>
                 <Link to='/'>home</Link>
               </li>
-              <li>
-                <Link to='/login'>Login</Link>
-              </li>
-              <li>
-                <Link to='/register'>Register</Link>
-              </li>
             </ul>
+            <AuthOptions />
         </div>
       </nav>
     )
