@@ -2,19 +2,37 @@ const express = require('express');
 const router = express.Router();
 
 const Recipe = require('../models/Recipe');
+const User = require('../models/user.model');
+
+// This will check for valid user
+const checkIfValidUser = async (id) => {
+    const user = await User.findById(id); // this will return null if no user
+    if(!user) { throw new Error('No user found!') }
+}
 
 // @route POST /recipes
 // @desc Creates new recipe
 // @access Public TODO: make private
 router.post('/', async (req, res) => {
 
-    const { name, steps, category, ingredients } = req.body;
+    const { name, steps, category, ingredients, createdBy } = req.body;
+
+    if(!name || !steps || !category || !Array.isArray(ingredients) || !ingredients.length || !createdBy) {
+        return res.status(400).json({error: 'Please fill in all required fields!'});
+    }
+
+    try {
+        await checkIfValidUser(createdBy);
+    } catch(e) {
+        return res.status(400).json({error: e.message});
+    }
 
     const newRecipe = new Recipe({
-        name: name,
-        steps: steps,
-        category: category,
-        ingredients: ingredients,
+        name,
+        steps,
+        category,
+        ingredients,
+        createdBy
     });
     newRecipe.save()
         .then(recipe => res.status(201).json(recipe))
@@ -38,6 +56,27 @@ router.get('/:id', async (req, res) => {
         .then(recipe => {
             if(recipe === null) { return res.status(404).json({error: 'Could not find recipe!'}) }
             return res.status(200).json(recipe);
+        })
+        .catch(err => res.status(400).json(err.message));
+});
+
+// @route GET /recipes/user/:id
+// @desc Returns recipes created by specified user id
+// @access Public
+router.get('/user/:id', async (req, res) => {
+
+    const { id } = req.params;
+    
+    try {
+        await checkIfValidUser(id);
+    } catch(e) {
+        return res.status(400).json({error: e.message});
+    }
+
+    Recipe.find({createdBy: id})
+        .then(recipes => {
+            if(!recipes.length) { return res.status(404).json({error: 'Could not find recipe!'}) }
+            return res.status(200).json(recipes);
         })
         .catch(err => res.status(400).json(err.message));
 });
