@@ -1,6 +1,7 @@
 import React, { useContext } from 'react'
 import { useHistory } from 'react-router-dom'
 import UserContext from '../../Context/UserContext'
+import Button from '@material-ui/core/Button'
 
 const AuthOptions = () => {
     const {userData, setUserData} = useContext(UserContext) //gets the data that is passed with the provider
@@ -27,12 +28,12 @@ const AuthOptions = () => {
             <>
             <div className='auth-options-box'>
                 <h5 className='float-left'>Welcome: {userData.user.username}</h5>
-                <button className='float-right auth-button' onClick={logout}>Logout</button>
+                <Button variant='contained' color='secondary' className='float-right auth-button' onClick={logout}>Logout</Button>
             </div>
             </> ): (
                 <>
-                    <button className='auth-button' onClick={register}>Register</button>
-                    <button className='auth-button' onClick={login}>Login</button>
+                    <Button variant='contained' color='secondary' onClick={register}>Register</Button>
+                    <Button variant='contained' color='secondary' onClick={login}>Login</Button>
                 </>
             )
             }

@@ -1,6 +1,10 @@
 import React, { useState, useContext } from 'react'
 import { useHistory } from 'react-router-dom'
 import UserContext from '../../Context/UserContext'
+import InputLabel from '@material-ui/core/InputLabel'
+import Grid from '@material-ui/core/Grid'
+import TextField from '@material-ui/core/TextField'
+import Button from '@material-ui/core/Button'
 import Axios from 'axios'
 
 const Register = () => {
@@ -36,21 +40,25 @@ const Register = () => {
 
     return (
         <div>
-            <h2>Register</h2>
-            <form onSubmit={submit}>
-                <label htmlFor='register-email'>Email: </label>
-                <input id='register-email' type='email' onChange={(e) => setEmail(e.target.value)}/>
+            <Grid container spacing={3}>
+            <Grid item md={12}>
+                <h2>Register</h2>
+                <form onSubmit={submit}>
+                    <InputLabel htmlFor='register-email'>Email: </InputLabel>
+                    <TextField id='register-email' placeholder='Email' type='email' onChange={(e) => setEmail(e.target.value)}/>
 
-                <label htmlFor='register-password'>Password: </label>
-                <input id='register-password' type='password' onChange={(e) => setPassword(e.target.value)} />
-                <input type='password' placeholder='Verify Password' onChange={(e) => setPasswordCheck(e.target.value)}/>
+                    <InputLabel htmlFor='register-password'>Password: </InputLabel>
+                    <TextField id='register-password' placeholder='Password' type='password' onChange={(e) => setPassword(e.target.value)} />
+                    <TextField type='password' placeholder='Verify Password' onChange={(e) => setPasswordCheck(e.target.value)}/>
 
-                <label htmlFor='register-username'>Username: </label>
-                <input id='register-username' type='text' onChange={(e) => setUsername(e.target.value)}/>
+                    <InputLabel htmlFor='register-username'>Username: </InputLabel>
+                    <TextField id='register-username' placeholder='Username' type='text' onChange={(e) => setUsername(e.target.value)}/>
 
-                <input type='submit' value='Register' />
-            </form>
-            <button onClick={login}>Already have an account?</button>
+                    <Button variant='contained' color='primary' type='submit'>Register</Button>
+                </form>
+                <Button variant='contained' color='primary' onClick={login}>Already have an account?</Button>
+            </Grid>
+            </Grid>
         </div>
     )
 }

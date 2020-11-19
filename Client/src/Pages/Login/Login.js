@@ -1,6 +1,10 @@
 import React, { useState, useContext } from 'react'
 import { useHistory } from 'react-router-dom'
 import UserContext from '../../Context/UserContext'
+import Button from '@material-ui/core/Button'
+import Grid from '@material-ui/core/Grid'
+import InputLabel from '@material-ui/core/InputLabel'
+import TextField from '@material-ui/core/TextField'
 import Axios from 'axios'
 
 const Login = () => {
@@ -34,17 +38,21 @@ const Login = () => {
 
     return (
         <div>
-            <h2>Login</h2>
-            <form onSubmit={submit}>
-                <label htmlFor='login-email'>Email: </label>
-                <input id='login-email' type='email' onChange={(e) => setEmail(e.target.value)}/>
+            <Grid container spacing={3}>
+                <Grid item md={12}>
+                    <h2>Login</h2>
+                    <form onSubmit={submit}>
+                        <InputLabel htmlFor='login-email'>Email: </InputLabel>
+                        <TextField id='login-email' type='email' onChange={(e) => setEmail(e.target.value)}/>
 
-                <label htmlFor='login-password'>Password: </label>
-                <input id='login-password' type='password' onChange={(e) => setPassword(e.target.value)} />
-                
-                <input type='submit' value='Login' />
-            </form>
-            <button onClick={register}>Need to make and account?</button>
+                        <InputLabel htmlFor='login-password'>Password: </InputLabel>
+                        <TextField id='login-password' type='password' onChange={(e) => setPassword(e.target.value)} />
+                        
+                        <Button variant='contained' color='primary' type='submit' value='Login'>Login</Button>
+                    </form>
+                    <Button variant='contained' color='primary' onClick={register}>Need to make and account?</Button>
+                </Grid>
+            </Grid>
         </div>
     )
 }
