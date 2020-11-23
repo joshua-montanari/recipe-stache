@@ -19,6 +19,7 @@ const CreateRecipe = () => {
     const addIngredient = () => {
         if(!ingredientText.length) { return; }
         setIngredients([...ingredients, ingredientText]);
+        setIngredientText('');
     }
 
     const submitForm = async () => {
