@@ -8,6 +8,7 @@ import Input from '../../Components/Controls/Input'
 import Axios from 'axios'
 import { useForm, Form } from '../../Components/useForm'
 
+//*initial state
 const initialValues = {
     email: '',
     password: '',
@@ -17,40 +18,41 @@ const initialValues = {
 
 const Register = () => {
 
+    //*State manager
     const{
         values,
         setValues,
+        errors,
+        setErrors,
         handleInputChange
     } = useForm(initialValues)
-
-    const [email, setEmail] = useState()
-    const [password, setPassword] = useState()
-    const [passwordCheck, setPasswordCheck] = useState()
-    const [username, setUsername] = useState()
-
-    const {setUserData} = useContext(UserContext)
 
     const history = useHistory()
 
     const login = () => history.push('/login')
 
-    const submit = async (e) => {
-        console.log('submit btn works')
-        e.preventDefault() // prevents page reload, so state isnt lost
-        // const newUser = {values}
-        await Axios.post('http://localhost:5000/users/register', values) //puts newUser object into the database using the register route
+    //*Checks each form field and makes sure its correct
+    const validate = () => {
+        let temp = {}
+        temp.email = (/$^|.+@.+..+/).test(values.email) ? "" : "Email is not valid"
+        temp.password = values.password ? "" : "This field is required"
+        temp.passwordCheck = values.passwordCheck === values.password ? "" : "Passwords must match"
+        temp.username = values.username ? "" : "This field is required"
+        setErrors({
+            ...temp
+        })
 
-        // const loginRes = await Axios.post('http://localhost:5000/users/login', {email, password})  //logs in the newly registed user, which also generates a jwt, in which will be stored in local stroage
-        
-        //sets context for whole app
-        // setUserData({
-        //     token: loginRes.data.token,
-        //     user: loginRes.data.user
-        // })
-        // //sets jwt in localstorage
-        // localStorage.setItem('auth-token', loginRes.data.token)
-        //goes to the home page
-        history.push('/login')
+        //*if all values are an empty string, then it is valid
+        return Object.values(temp).every(x => x === "")
+    }
+
+    const submit = async (e) => {
+        e.preventDefault()
+        if(validate()){
+            //!registers user, sends to login
+            await Axios.post('http://localhost:5000/users/register', values)
+            history.push('/login')
+        }    
     }
 
     return (
@@ -62,8 +64,9 @@ const Register = () => {
                             label='Email'
                             name='email'
                             value={values.email}
-                            type='email'
+                            type='text'
                             onChange={handleInputChange}
+                            error={errors.email}
                         />
                         <Input
                             label='Password'
@@ -71,6 +74,7 @@ const Register = () => {
                             type='password'
                             value={values.password}
                             onChange={handleInputChange}
+                            error={errors.password}
                         />
                         <Input 
                             label='Verify Password'
@@ -78,6 +82,7 @@ const Register = () => {
                             type='password'
                             value={values.passwordCheck}
                             onChange={handleInputChange}
+                            error={errors.passwordCheck}
                         />
                         <Input
                             label='Username'
@@ -85,6 +90,7 @@ const Register = () => {
                             type='text'
                             value={values.username}
                             onChange={handleInputChange}
+                            error={errors.username}
                         />
                         <Button variant='contained' color='primary' type='submit'>Register</Button>
                     </Grid> 
