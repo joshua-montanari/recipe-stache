@@ -19,7 +19,7 @@ const initialValues = {
 const Register = () => {
 
     //*State manager
-    const{
+    const {
         values,
         setValues,
         errors,
