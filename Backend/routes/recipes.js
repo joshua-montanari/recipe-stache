@@ -3,12 +3,17 @@ const router = express.Router();
 
 const Recipe = require('../models/Recipe');
 const User = require('../models/user.model');
+const upload = require('../middleware/upload');
 
 // This will check for valid user
 const checkIfValidUser = async (id) => {
     const user = await User.findById(id); // this will return null if no user
     if(!user) { throw new Error('No user found!') }
 }
+
+router.post('/image', upload.single('file'), async (req, res) => {
+    return res.json({file: req.file});
+});
 
 // @route POST /recipes
 // @desc Creates new recipe
