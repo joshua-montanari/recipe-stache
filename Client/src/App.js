@@ -8,6 +8,7 @@ import Error from './Pages/Error/Error'
 import Hero from './Components/Hero'
 import Axios from 'axios'
 import UserContext from './Context/UserContext'
+import CreateRecipe from './Pages/CreateRecipe/CreateRecipe';
 
 function App() {
 
@@ -47,6 +48,7 @@ function App() {
           <Route exact path='/' component={Home} />
           <Route exact path='/login' component={Login} />
           <Route exact path='/register' component={Register} />
+          <Route exact path='/create-recipe' component={CreateRecipe} />
           <Route component={Error} />
         </Switch>
       </UserContext.Provider>
