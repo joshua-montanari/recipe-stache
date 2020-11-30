@@ -4,6 +4,7 @@ const router = express.Router();
 const Recipe = require('../models/Recipe');
 const User = require('../models/user.model');
 const upload = require('../middleware/upload');
+const auth = require('../middleware/auth');
 
 // This will check for valid user
 const checkIfValidUser = async (id) => {
@@ -14,8 +15,8 @@ const checkIfValidUser = async (id) => {
 // @route POST /recipes
 // @desc Creates new recipe
 // @access Public TODO: make private
-router.post('/', upload.single('file'), async (req, res) => {
-
+router.post('/', auth, upload.single('file'), async (req, res) => {
+  
     const { name, steps, category, ingredients, createdBy } = req.body;
 
     if(!req.file) { return res.status(400).json({error: 'No file uploaded'}) }
@@ -88,8 +89,8 @@ router.get('/user/:id', async (req, res) => {
 
 // @route PUT /recipes/:id
 // @desc Updates recipe specified by id
-// @access Public TODO: make private
-router.put('/:id', async (req, res) => {
+// @access Private
+router.put('/:id', auth, async (req, res) => {
     Recipe.findByIdAndUpdate(req.params.id, {$set: req.body}, {new: true, useFindAndModify: false})
         .then(recipe => {
             if(recipe === null) { return res.status(404).json({error: 'Could not locate recipe to update!'}) }
@@ -100,8 +101,8 @@ router.put('/:id', async (req, res) => {
 
 // @route DELETE /recipes/:id
 // @desc Deletes recipe specified by id
-// @access Public TODO: make private
-router.delete('/:id', async (req, res) => {
+// @access Private
+router.delete('/:id', auth, async (req, res) => {
     Recipe.findByIdAndDelete(req.params.id)
         .then(recipe => {
             if(recipe === null) { return res.status(404).json({ error: 'Could not locate recipe to delete!'}) }
