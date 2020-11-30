@@ -1,6 +1,5 @@
 const multer = require('multer');
 const GridFsStorage = require('multer-gridfs-storage');
-const Grid = require('gridfs-stream');
 const crypto = require('crypto');
 const path = require('path');
 
@@ -9,7 +8,7 @@ const storage = new GridFsStorage({
     url: process.env.ATLAS_URI,
     file: async (req, file) => {
         try {
-            const fileData = await crypto.randomBytes(16, (err, buf) => {
+            return await crypto.randomBytes(16, (err, buf) => {
                 if (err) {
                     throw new Error(err);
                 }

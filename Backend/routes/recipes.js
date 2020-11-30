@@ -11,18 +11,17 @@ const checkIfValidUser = async (id) => {
     if(!user) { throw new Error('No user found!') }
 }
 
-router.post('/image', upload.single('file'), async (req, res) => {
-    return res.json({file: req.file});
-});
-
 // @route POST /recipes
 // @desc Creates new recipe
 // @access Public TODO: make private
-router.post('/', async (req, res) => {
+router.post('/', upload.single('file'), async (req, res) => {
 
     const { name, steps, category, ingredients, createdBy } = req.body;
 
-    if(!name || !steps || !category || !Array.isArray(ingredients) || !ingredients.length || !createdBy) {
+    if(!req.file) { return res.status(400).json({error: 'No file uploaded'}) }
+    const { filename } = req.file;
+
+    if(!name || !steps || !category || !Array.isArray(ingredients) || !ingredients.length || !createdBy || !filename) {
         return res.status(400).json({error: 'Please fill in all required fields!'});
     }
 
@@ -37,7 +36,8 @@ router.post('/', async (req, res) => {
         steps,
         category,
         ingredients,
-        createdBy
+        createdBy,
+        filename,
     });
     newRecipe.save()
         .then(recipe => res.status(201).json(recipe))
