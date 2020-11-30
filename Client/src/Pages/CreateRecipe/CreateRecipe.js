@@ -7,6 +7,7 @@ import Button from '@material-ui/core/Button';
 import axios from 'axios';
 
 import IngredientList from '../../Components/Ingredients/IngredientList';
+import RecipeEditor from '../../Components/Editor/RecipeEditor';
 
 const CreateRecipe = () => {
 
@@ -54,7 +55,10 @@ const CreateRecipe = () => {
             <form>
                 <TextField id="recipe-name" label="Recipe Name" variant="filled" onChange={e => setRecipeName(e.target.value)} />
                 {/* TODO: Add Markdown editor */}
-                <TextField id="recipe-steps" label="Recipe Steps" variant="filled" multiline rows={4} onChange={e => setRecipeSteps(e.target.value)} />
+                {/* <TextField id="recipe-steps" label="Recipe Steps" variant="filled" multiline rows={4} onChange={e => setRecipeSteps(e.target.value)} /> */}
+
+                <RecipeEditor recipeSteps={recipeSteps} setRecipeSteps={setRecipeSteps} />
+                
                 <Select
                 labelId="category"
                 id="category"
