@@ -3,6 +3,7 @@ const router = express.Router();
 
 const Recipe = require('../models/Recipe');
 const User = require('../models/user.model');
+const upload = require('../middleware/upload');
 const auth = require('../middleware/auth');
 
 // This will check for valid user
@@ -13,12 +14,15 @@ const checkIfValidUser = async (id) => {
 
 // @route POST /recipes
 // @desc Creates new recipe
-// @access Private
-router.post('/', auth, async (req, res) => {
-
+// @access Public TODO: make private
+router.post('/', auth, upload.single('file'), async (req, res) => {
+  
     const { name, steps, category, ingredients, createdBy } = req.body;
 
-    if(!name || !steps || !category || !Array.isArray(ingredients) || !ingredients.length || !createdBy) {
+    if(!req.file) { return res.status(400).json({error: 'No file uploaded'}) }
+    const { filename } = req.file;
+
+    if(!name || !steps || !category || !Array.isArray(ingredients) || !ingredients.length || !createdBy || !filename) {
         return res.status(400).json({error: 'Please fill in all required fields!'});
     }
 
@@ -33,7 +37,8 @@ router.post('/', auth, async (req, res) => {
         steps,
         category,
         ingredients,
-        createdBy
+        createdBy,
+        filename,
     });
     newRecipe.save()
         .then(recipe => res.status(201).json(recipe))
