@@ -1,8 +1,6 @@
-import React, { useState, useContext, useEffect } from 'react'
+import React, { useState } from 'react'
 import { useHistory } from 'react-router-dom'
-import UserContext from '../../Context/UserContext'
-import InputLabel from '@material-ui/core/InputLabel'
-import  { Grid, TextField, makeStyles}  from '@material-ui/core'
+import  { Grid }  from '@material-ui/core'
 import Button from '@material-ui/core/Button'
 import Input from '../../Components/Controls/Input'
 import Axios from 'axios'
@@ -16,8 +14,6 @@ const initialValues = {
     passwordCheck: '',
     username: ''
 }
-
-
 
 const Register = () => {
 

@@ -3,13 +3,10 @@ import { useHistory } from 'react-router-dom'
 import UserContext from '../../Context/UserContext'
 import Button from '@material-ui/core/Button'
 import Grid from '@material-ui/core/Grid'
-import InputLabel from '@material-ui/core/InputLabel'
-import TextField from '@material-ui/core/TextField'
 import Input from '../../Components/Controls/Input'
 import { useForm, Form } from '../../Components/useForm'
 import AlertMessage from '../../Components/AlertMessage/AlertMessage'
 import setCookie from '../../Util/SetCookie'
-import getCookie from '../../Util/GetCookie'
 import Axios from 'axios'
 
 //*initial state
@@ -61,12 +58,6 @@ const Login = () => {
             //sets jwt in cookies
             setCookie('jwt', loginRes.data.token, 365)
             setCookie('userId', loginRes.data.user.id, 365)
-            console.log(getCookie('jwt'))
-            console.log(getCookie('userId'))
-            //sets jwt in localstroage
-            // localStorage.setItem('auth-token', loginRes.data.token)
-            // localStorage.setItem('user-id', loginRes.data.user.id)
-            // localStorage.setItem('username', loginRes.data.user.username)
             //goes to the home page
             history.push('/')
             }
