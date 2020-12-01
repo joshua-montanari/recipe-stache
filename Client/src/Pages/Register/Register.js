@@ -89,43 +89,43 @@ const Register = () => {
                     )
                 }
                 <Grid item xs={3}></Grid>
-                <Form onSubmit={submit}>
-                    <Grid item xs={6}>
-                        <Input 
-                            label='Email'
-                            name='email'
-                            value={values.email}
-                            type='text'
-                            onChange={handleInputChange}
-                            error={errors.email}
-                        />
-                        <Input
-                            label='Password'
-                            name='password'
-                            type='password'
-                            value={values.password}
-                            onChange={handleInputChange}
-                            error={errors.password}
-                        />
-                        <Input 
-                            label='Verify Password'
-                            name='passwordCheck'
-                            type='password'
-                            value={values.passwordCheck}
-                            onChange={handleInputChange}
-                            error={errors.passwordCheck}
-                        />
-                        <Input
-                            label='Username'
-                            name='username'
-                            type='text'
-                            value={values.username}
-                            onChange={handleInputChange}
-                            error={errors.username}
-                        />
-                        <Button variant='contained' color='primary' type='submit'>Register</Button>
+                <Grid item xs={6}>
+                    <Form onSubmit={submit}>
+                            <Input 
+                                label='Email'
+                                name='email'
+                                value={values.email}
+                                type='text'
+                                onChange={handleInputChange}
+                                error={errors.email}
+                            />
+                            <Input
+                                label='Password'
+                                name='password'
+                                type='password'
+                                value={values.password}
+                                onChange={handleInputChange}
+                                error={errors.password}
+                            />
+                            <Input 
+                                label='Verify Password'
+                                name='passwordCheck'
+                                type='password'
+                                value={values.passwordCheck}
+                                onChange={handleInputChange}
+                                error={errors.passwordCheck}
+                            />
+                            <Input
+                                label='Username'
+                                name='username'
+                                type='text'
+                                value={values.username}
+                                onChange={handleInputChange}
+                                error={errors.username}
+                            />
+                            <Button variant='contained' color='primary' type='submit'>Register</Button>
+                        </Form>
                     </Grid> 
-                </Form>
                 <Button variant='contained' color='primary' onClick={login}>Already have an account?</Button>
                 <Grid item xs={3}></Grid>
             </Grid>

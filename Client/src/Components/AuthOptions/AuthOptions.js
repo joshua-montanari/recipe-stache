@@ -2,6 +2,8 @@ import React, { useContext } from 'react'
 import { useHistory } from 'react-router-dom'
 import UserContext from '../../Context/UserContext'
 import Button from '@material-ui/core/Button'
+import setCookie from '../../Util/SetCookie'
+import getCookie from '../../Util/GetCookie'
 
 const AuthOptions = () => {
     const {userData, setUserData} = useContext(UserContext) //gets the data that is passed with the provider
@@ -16,9 +18,12 @@ const AuthOptions = () => {
             token: undefined,
             user: undefined
         })
-        localStorage.setItem('auth-token', '')
-        localStorage.setItem('user-id', '')
-        localStorage.setItem('username', '')
+        // localStorage.setItem('auth-token', '')
+        // localStorage.setItem('user-id', '')
+        // localStorage.setItem('username', '')
+        //!Expires the cookies
+        document.cookie = "jwt=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+        document.cookie = "userId=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
     }
 
     return (

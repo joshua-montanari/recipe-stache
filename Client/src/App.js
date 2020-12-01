@@ -6,6 +6,7 @@ import Register from './Pages/Register/Register'
 import Navbar from './Components/Navbar/Navbar'
 import Error from './Pages/Error/Error'
 import Hero from './Components/Hero'
+import getCookie from './Util/GetCookie'
 import Axios from 'axios'
 import UserContext from './Context/UserContext'
 
@@ -20,11 +21,11 @@ function App() {
   //checks if a user is already logged in from last session (checks if there  is a jwt in local storage, and if jwt i valid)
   useEffect( () => {
     const checkLogin = async () => {
-      let token = localStorage.getItem('auth-token') //sees if there is an active jwt in local storage, returns undf or null if no jwt
-      if(token === null) { //on startup, local storage variables are not created, which causes a server error if we check for a jwt under that variable. This checks to see if the local storage variable exsists, and then fills it
-        localStorage.setItem('auth-token', '')
-        token = ''
-      }
+      let token = getCookie('jwt') //sees if there is an active jwt in local storage, returns undf or null if no jwt
+      // if(token === null) { //on startup, local storage variables are not created, which causes a server error if we check for a jwt under that variable. This checks to see if the local storage variable exsists, and then fills it
+      //   localStorage.setItem('auth-token', '')
+      //   token = ''
+      // }
       const tokenRes = await Axios.post('http://localhost:5000/users/tokenIsValid', null, {headers: {'x-auth-token': token}}) //runs the tokenIsValid backend route, to check if the token from local storage is valid
       if (tokenRes.data){
         const userRes = await Axios.get('http://localhost:5000/users/', {headers: {'x-auth-token': token}, })
