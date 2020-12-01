@@ -20,7 +20,11 @@ router.post('/register', async(req, res) => {
 
         const existingUser = await User.findOne({email: email})
         if(existingUser)
-            return res.status(400).json({msg: 'user already exists'})
+            return res.status(420).json({msg: 'user already exists'})
+            
+        const existingUsername = await User.findOne({username: username})
+        if(existingUsername)
+             return res.status(423).json({msg: 'username already exists'})
         
         if(!username) username = email
 
@@ -54,12 +58,12 @@ router.post('/login', async (req, res) =>{
         const user = await User.findOne({email: email}) //finds a user that matches the entered email
         
         if(!user)
-            return res.status(400).json({ msg: 'no account with this email has been created'})
+            return res.status(421).json({ msg: 'no account with this email has been created'})
 
         const isMatch = await bcrypt.compare(password, user.password) //compares entered password to the encrypted password in the database
 
         if(!isMatch)
-            return res.status(400).json({ msg: 'the password you entered is not correct'})
+            return res.status(422).json({ msg: 'the password you entered is not correct'})
 
         const token = jwt.sign({id: user._id}, process.env.JWT_SECRET) //connects a jwt to a user id, JWT_SECRET is an env password, to make sure that a jwt is created by this application
         res.json({

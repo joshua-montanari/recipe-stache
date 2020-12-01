@@ -7,6 +7,7 @@ import InputLabel from '@material-ui/core/InputLabel'
 import TextField from '@material-ui/core/TextField'
 import Input from '../../Components/Controls/Input'
 import { useForm, Form } from '../../Components/useForm'
+import AlertMessage from '../../Components/AlertMessage/AlertMessage'
 import Axios from 'axios'
 
 //*initial state
@@ -16,6 +17,8 @@ const initialValues= {
 }
 
 const Login = () => {
+
+    const [backendError, setBackendError] = useState({ error: false, type: ''})
 
     //*State manager
     const {
@@ -50,7 +53,8 @@ const Login = () => {
     const submit = async (e) => {
         e.preventDefault() // prevents page reload, so state isnt lost
         if(validate()){
-            const loginRes = await Axios.post('http://localhost:5000/users/login', values)  //logs in the newly register user, which also generates a jwt, in which will be stored in local stroage
+            try{
+                const loginRes = await Axios.post('http://localhost:5000/users/login', values)  //logs in the newly register user, which also generates a jwt, in which will be stored in local stroage
             setUserData({
                 token: loginRes.data.token,
                 user: loginRes.data.user
@@ -61,12 +65,35 @@ const Login = () => {
             localStorage.setItem('username', loginRes.data.user.username)
             //goes to the home page
             history.push('/')
+            }
+            catch(error){
+                
+                if(error.response.status === 421){
+                    setBackendError({error: true, type: 'No account with this email has been found'})
+                }else if(error.response.status === 422){
+                    setBackendError({error: true, type: 'Password does not match'})
+                }else if(error.response.status === 500){
+                    setBackendError({error: true, type: 'Server Error'})
+                }else{
+                    setBackendError({error: true, type: 'Unknown error'})
+                }
+            }
         }        
     }
 
     return (
         <div>
             <Grid container>
+                {
+                    backendError.error ? (
+                        <>
+                            <AlertMessage severity='error' message={backendError.type} />
+                        </>
+                    ): (
+                        <>
+                        </>
+                    )
+                }
                 <Grid item md={3}></Grid>
                 <Grid item md={6}>
                     <Form onSubmit={submit}>

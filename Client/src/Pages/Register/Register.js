@@ -7,6 +7,7 @@ import Button from '@material-ui/core/Button'
 import Input from '../../Components/Controls/Input'
 import Axios from 'axios'
 import { useForm, Form } from '../../Components/useForm'
+import AlertMessage from '../../Components/AlertMessage/AlertMessage'
 
 //*initial state
 const initialValues = {
@@ -15,6 +16,8 @@ const initialValues = {
     passwordCheck: '',
     username: ''
 }
+
+
 
 const Register = () => {
 
@@ -26,6 +29,9 @@ const Register = () => {
         setErrors,
         handleInputChange
     } = useForm(initialValues)
+
+    //*true if user tries to register with an existing email
+    const [backendError, setBackendError] = useState({ error: false, type: ''})
 
     const history = useHistory()
 
@@ -50,13 +56,38 @@ const Register = () => {
         e.preventDefault()
         if(validate()){
             //!registers user, sends to login
-            await Axios.post('http://localhost:5000/users/register', values)
-            history.push('/login')
+            try{
+                await Axios.post('http://localhost:5000/users/register', values)
+                history.push('/login')
+            }
+            catch(error){
+                if(error.response.status === 420){
+                    setBackendError({error: true, type: 'This email is already registered'})
+                }else if(error.response.status === 423){
+                    setBackendError({error: true, type: 'Username already taken'})
+                }else if(error.response.status === 500){
+                    setBackendError({error: true, type: 'Server Error'})
+                }else{
+                    setBackendError({error: true, type: 'Unknown error'})
+                }
+            }
         }    
     }
 
     return (
+            
             <Grid container>
+                {
+                    backendError.error ? (
+                        <>
+                            <AlertMessage severity='error' message={backendError.type}/>
+                        </>
+                    ): (
+                        <>
+                            
+                        </>
+                    )
+                }
                 <Grid item xs={3}></Grid>
                 <Form onSubmit={submit}>
                     <Grid item xs={6}>
