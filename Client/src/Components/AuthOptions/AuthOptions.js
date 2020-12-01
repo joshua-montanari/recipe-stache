@@ -3,7 +3,6 @@ import { useHistory } from 'react-router-dom'
 import UserContext from '../../Context/UserContext'
 import Button from '@material-ui/core/Button'
 import deleteCookie from '../../Util/DeleteCookie'
-import getCookie from '../../Util/GetCookie'
 
 const AuthOptions = () => {
     const {userData, setUserData} = useContext(UserContext) //gets the data that is passed with the provider
