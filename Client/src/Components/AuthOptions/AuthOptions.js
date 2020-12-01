@@ -21,7 +21,6 @@ const AuthOptions = () => {
         //!Expires the cookies on logout
         deleteCookie('jwt')
         deleteCookie('userId')
-        console.log(getCookie('jwt'))
     }
 
     return (
