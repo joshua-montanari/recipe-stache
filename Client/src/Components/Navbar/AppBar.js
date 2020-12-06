@@ -6,6 +6,7 @@ import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import InputBase from '@material-ui/core/InputBase';
 import Badge from '@material-ui/core/Badge';
+import Button from '@material-ui/core/Button';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import MenuIcon from '@material-ui/icons/Menu';
@@ -230,6 +231,8 @@ export default function PrimarySearchAppBar() {
           <Typography className={classes.title, classes.pointer} variant="h6" noWrap onClick={handleHomePage}>
             Recipe-Stache 
           </Typography>
+          <Button color="inherit" onClick={handleHomePage}>Home</Button>
+          <Button color="inherit">Recipes</Button>
           <div className={classes.search}>
             <div className={classes.searchIcon}>
               <SearchIcon />
