@@ -18,8 +18,7 @@ const checkIfValidUser = async (id) => {
 router.post('/', auth, upload.single('file'), async (req, res) => {
   
     const { name, steps, category, ingredients, createdBy } = req.body;
-
-    if(!req.file) { return res.status(400).json({error: 'No file uploaded'}) }
+    if(!req.file) { return res.status(400).json( {error: 'No file uploaded'}) }
     const { filename } = req.file;
 
     if(!name || !steps || !category || !Array.isArray(ingredients) || !ingredients.length || !createdBy || !filename) {

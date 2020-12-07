@@ -1,5 +1,6 @@
 import React from 'react';
 import Chip from '@material-ui/core/Chip';
+import Box from '@material-ui/core/Box';
 
 const Ingredient = ({ingredient, ingredients, setIngredients}) => {
 
@@ -14,10 +15,12 @@ const Ingredient = ({ingredient, ingredients, setIngredients}) => {
 
     return (
         <div>
-            <Chip 
-                label={ingredient}
-                onDelete={handleDelete}
-            />
+            <Box m={1}>
+                <Chip 
+                    label={ingredient}
+                    onDelete={handleDelete}
+                />
+            </Box>
         </div>
     )
 }
