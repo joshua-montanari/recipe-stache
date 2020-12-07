@@ -21,6 +21,10 @@ const RecipeSchema = new Schema({
     createdBy: {
         type: Schema.Types.ObjectId,
         required: true,
+    },
+    filename: {
+        type: String,
+        required: true,
     }
 });
 
