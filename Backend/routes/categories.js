@@ -1,3 +1,4 @@
+const { createHash } = require('crypto');
 const express = require('express');
 const router = express.Router();
 const auth = require('../middleware/auth');
@@ -18,7 +19,9 @@ router.get('/', async (req, res) => {
 // @access Public
 router.get('/:id', async (req, res) => {
     Category.findById(req.params.id)
-        .then(category => res.status(200).json(category))
+        .then(category => {
+            category ? res.status(200).json(category) : res.status(400).json({error: "No category found!"});
+        })
         .catch(err => res.status(400).json(err.message));
 });
 
@@ -32,6 +35,31 @@ router.post('/', auth, async (req, res) => {
 
     newCategory.save()
         .then(category => res.status(201).json(category))
+        .catch(err => res.status(400).json(err.message));
+});
+
+// @route PUT /categories
+// @desc Updates recipe category
+// @access Private
+router.put('/:id', auth, async (req, res) => {
+    if(!req.body.name) { return res.status(400).json({error: 'Please provide category name'}) }
+
+    Category.findByIdAndUpdate(req.params.id, {name: req.body.name}, {new: true})
+        .then(category => {
+            category ? res.status(200).json(category) : res.status(400).json({error: "No category found to update!"});
+        })
+        .catch(err => res.status(400).json(err.message));
+});
+
+// @route DELETE /categories
+// @desc Deletes recipe category
+// @access Private
+router.delete('/:id', auth, async (req, res) => {
+
+    Category.findByIdAndRemove(req.params.id)
+        .then(category => {
+            category ? res.status(200).json(category) : res.status(400).json({error: "No category found to delete!"});
+        })
         .catch(err => res.status(400).json(err.message));
 });
 
