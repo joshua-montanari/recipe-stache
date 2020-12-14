@@ -1,7 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {Editor, EditorState} from 'draft-js';
-import 'draft-js/dist/Draft.css';
+import { EditorState } from 'draft-js';
+import { Editor } from 'react-draft-wysiwyg';
+import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
+//import 'draft-js/dist/Draft.css';
 
 const RecipeEditor = ({recipeSteps, setRecipeSteps}) => {
 
@@ -11,7 +13,7 @@ const RecipeEditor = ({recipeSteps, setRecipeSteps}) => {
 
     return (
         <>
-            <Editor editorState={editorState} onChange={setEditorState} />;
+            <Editor editorState={editorState} onEditorStateChange={setEditorState} />;
         </>
     );
 }

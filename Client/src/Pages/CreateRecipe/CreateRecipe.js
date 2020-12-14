@@ -16,6 +16,7 @@ import axios from 'axios';
 
 import IngredientList from '../../Components/Ingredients/IngredientList';
 import RecipeEditor from '../../Components/Editor/RecipeEditor';
+import RichTextEditor from '../../Components/RichTextEditor/RichTextEditor';
 
 import { makeStyles } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
@@ -90,7 +91,7 @@ const CreateRecipe = () => {
         }
     }   
 
-    if(!localStorage.getItem('user-id')) { return(<p>Unauthorized</p>) }
+    // if(!localStorage.getItem('user-id')) { return(<p>Unauthorized</p>) }
 
     return (
         <Container>
@@ -123,6 +124,8 @@ const CreateRecipe = () => {
                             onChange={e => setRecipeSteps(e.target.value)} 
                         />
                         {/* TODO: Add Markdown editor */}
+                        <RichTextEditor />
+                        {/* <RecipeEditor /> */}
                         {/* <RecipeEditor recipeSteps={recipeSteps} setRecipeSteps={setRecipeSteps} /> */}
                         <FormControl variant="filled">
                             <InputLabel id="category-label">Recipe Category</InputLabel>
