@@ -8,6 +8,7 @@ const Grid = require('gridfs-stream');
 require('dotenv').config();
 
 const recipes = require('./routes/recipes');
+const categories = require('./routes/categories');
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -35,6 +36,8 @@ const usersRouter = require('./routes/users');
 app.use('/users', usersRouter);
 
 app.use('/recipes', recipes);
+
+app.use('/categories', categories);
 
 app.listen(port, () => {
     console.log(`Server is running on port: ${port}`);
