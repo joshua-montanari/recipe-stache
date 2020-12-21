@@ -33,7 +33,6 @@ const AuthOptions = () => {
             </div>
             </> ): (
                 <>
-                    <Button variant='contained' color='secondary' onClick={register}>Register</Button>
                     <Button variant='contained' color='secondary' onClick={login}>Login</Button>
                 </>
             )

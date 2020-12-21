@@ -1,37 +1,34 @@
-import React, { useContext } from 'react';
-import { fade, makeStyles } from '@material-ui/core/styles';
+import React, { useEffect, useState, useContext } from 'react';
+import { fade, makeStyles, useTheme } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
-import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
-import InputBase from '@material-ui/core/InputBase';
-import Badge from '@material-ui/core/Badge';
-import Button from '@material-ui/core/Button';
+import IconButton from '@material-ui/core/IconButton';
+import MenuIcon from '@material-ui/icons/Menu';
+import AccountCircle from '@material-ui/icons/AccountCircle';
+import Switch from '@material-ui/core/Switch';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import FormGroup from '@material-ui/core/FormGroup';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
-import MenuIcon from '@material-ui/icons/Menu';
-import SearchIcon from '@material-ui/icons/Search';
-import AccountCircle from '@material-ui/icons/AccountCircle';
-import MailIcon from '@material-ui/icons/Mail';
-import NotificationsIcon from '@material-ui/icons/Notifications';
-import MoreIcon from '@material-ui/icons/MoreVert';
+import { withRouter } from 'react-router-dom'
+import { Button, Icon, useMediaQuery } from '@material-ui/core';
 import getCookie from '../../Util/GetCookie'
 import deleteCookie from '../../Util/DeleteCookie'
 import UserContext from '../../Context/UserContext'
-import { useHistory } from 'react-router-dom'
+import SearchIcon from '@material-ui/icons/Search';
+import InputBase from '@material-ui/core/InputBase';
+import CloseIcon from '@material-ui/icons/Close';
 
 const useStyles = makeStyles((theme) => ({
-  grow: {
+  root: {
     flexGrow: 1,
   },
   menuButton: {
     marginRight: theme.spacing(2),
   },
   title: {
-    display: 'none',
-    [theme.breakpoints.up('sm')]: {
-      display: 'block',
-    },
+    flexGrow: 1,
   },
   search: {
     position: 'relative',
@@ -70,39 +67,29 @@ const useStyles = makeStyles((theme) => ({
     transition: theme.transitions.create('width'),
     width: '100%',
     [theme.breakpoints.up('md')]: {
-      width: '20ch',
-    },
-  },
-  sectionDesktop: {
-    display: 'none',
-    [theme.breakpoints.up('md')]: {
-      display: 'flex',
-    },
-  },
-  sectionMobile: {
-    display: 'flex',
-    [theme.breakpoints.up('md')]: {
-      display: 'none',
+      width: '100%',
     },
   },
 }));
 
-export default function PrimarySearchAppBar() {
+const Header = (props) => {
   const {userData, setUserData} = useContext(UserContext)
 
-  const history = useHistory()
-  const profile = () => history.push('/profile')
-  const login = () => history.push('/login')
-  const home = () => history.push('/')
-
+  const { history } = props
   const classes = useStyles();
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
+  const [auth, setAuth] = useState(true);
+  const [mobileSearch, setMobileSearch] = useState(false)
+  const [anchorEl, setAnchorEl] = useState(null);
+  const open = Boolean(anchorEl);
+  const theme = useTheme()
+  //*responds true if screen size is 'sm' or smaller
+  const isMobile = useMediaQuery(theme.breakpoints.down('xs'))
 
-  const isMenuOpen = Boolean(anchorEl);
-  const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+  const handleChange = (event) => {
+    setAuth(event.target.checked);
+  };
 
-  const logout = () => {
+  const logout = (pageURL) => {
     //on logout, sets user context to undefined and deletes the jwt from local storage
     setUserData({
         token: undefined,
@@ -111,179 +98,113 @@ export default function PrimarySearchAppBar() {
     //!Expires the cookies on logout
     deleteCookie('jwt')
     deleteCookie('userId')
+    history.push(pageURL)
+    setAnchorEl(null);
 }
 
-  const handleProfilePage = () => {
-      profile()
-      handleMenuClose()
-  }
-
-  const handleLogout = () => {
-    logout()
-    home()
-    handleMenuClose()
-  }
-
-  const handleLoginPage = () => {
-    login()
-    handleMenuClose()
-  }
-
-  const handleHomePage = () => {
-    home()
-  }
-
-  const handleProfileMenuOpen = (event) => {
+  const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
   };
 
-  const handleMobileMenuClose = () => {
-    setMobileMoreAnchorEl(null);
-  };
-
-  const handleMenuClose = () => {
+  const handleMenuClick = (pageURL) => {
+    history.push(pageURL)
     setAnchorEl(null);
-    handleMobileMenuClose();
   };
 
-  const handleMobileMenuOpen = (event) => {
-    setMobileMoreAnchorEl(event.currentTarget);
-  };
+  const handleMobileSearch = () => {
+    setMobileSearch(!mobileSearch)
+  }
 
-  const menuId = 'primary-search-account-menu';
-  const renderMenu = (
-    <Menu
-      anchorEl={anchorEl}
-      anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-      id={menuId}
-      keepMounted
-      transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-      open={isMenuOpen}
-      onClose={handleMenuClose}
-    >
-      { getCookie('jwt') !== '' ? (
-        <>
-          <MenuItem onClick={handleProfilePage}>Profile</MenuItem>
-          <MenuItem onClick={handleMenuClose}>My Recipes</MenuItem>
-          <MenuItem onClick={handleLogout}>Logout</MenuItem>
-        </>
-      ): (
-        <>
-          <MenuItem onClick={handleLoginPage}>Login</MenuItem>
-        </>
-      ) }
-    </Menu>
-  );
-
-  const mobileMenuId = 'primary-search-account-menu-mobile';
-  const renderMobileMenu = (
-    <Menu
-      anchorEl={mobileMoreAnchorEl}
-      anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-      id={mobileMenuId}
-      keepMounted
-      transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-      open={isMobileMenuOpen}
-      onClose={handleMobileMenuClose}
-    >
-      <MenuItem>
-        <IconButton aria-label="show 4 new mails" color="inherit">
-          <Badge badgeContent={0} color="secondary">
-            <MailIcon />
-          </Badge>
-        </IconButton>
-        <p>Messages</p>
-      </MenuItem>
-      <MenuItem>
-        <IconButton aria-label="show 11 new notifications" color="inherit">
-          <Badge badgeContent={0} color="secondary">
-            <NotificationsIcon />
-          </Badge>
-        </IconButton>
-        <p>Notifications</p>
-      </MenuItem>
-      <MenuItem onClick={handleProfileMenuOpen}>
-        <IconButton
-          aria-label="account of current user"
-          aria-controls="primary-search-account-menu"
-          aria-haspopup="true"
-          color="inherit"
-        >
-          <AccountCircle />
-        </IconButton>
-        <p>Profile</p>
-      </MenuItem>
-    </Menu>
-  );
+  useEffect( () => {
+    if(getCookie('jwt') !== ''){
+      setAuth(true)
+    }else{
+      setAuth(false)
+    }
+  }, [])
 
   return (
-    <div className={classes.grow}>
+    <div className={classes.root}>
       <AppBar position="static">
         <Toolbar>
-          <IconButton
-            edge="start"
-            className={classes.menuButton}
-            color="inherit"
-            aria-label="open drawer"
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography className={classes.title, classes.pointer} variant="h6" noWrap onClick={handleHomePage}>
-            Recipe-Stache 
-          </Typography>
-          <Button color="inherit" onClick={handleHomePage}>Home</Button>
-          <Button color="inherit">Recipes</Button>
-          <div className={classes.search}>
-            <div className={classes.searchIcon}>
-              <SearchIcon />
+            <Typography variant="h6" className={classes.title}>
+              Recipe Stache
+            </Typography>
+            <div>
+              {isMobile ? (
+                  <>
+                    <IconButton
+                    edge="start"
+                    className={classes.menuButton}
+                    color="inherit" 
+                    aria-label="menu"
+                    >
+                        <SearchIcon onClick={handleMobileSearch} />
+                    </IconButton>
+                  </> 
+                ):(
+                  <>
+                    <div className={classes.search}>
+                    <div className={classes.searchIcon}>
+                      <SearchIcon />
+                    </div>
+                    <InputBase
+                      placeholder="Search…"
+                      classes={{
+                        root: classes.inputRoot,
+                        input: classes.inputInput,
+                      }}
+                      inputProps={{ 'aria-label': 'search' }}
+                    />
+                  </div>  
+                  </>
+                )
+              }
+              
             </div>
-            <InputBase
-              placeholder="Search…"
-              classes={{
-                root: classes.inputRoot,
-                input: classes.inputInput,
-              }}
-              inputProps={{ 'aria-label': 'search' }}
-            />
-          </div>
-          <div className={classes.grow} />
-          <div className={classes.sectionDesktop}>
-            <IconButton aria-label="show 4 new mails" color="inherit">
-              <Badge badgeContent={0} color="secondary">
-                <MailIcon />
-              </Badge>
-            </IconButton>
-            <IconButton aria-label="show 17 new notifications" color="inherit">
-              <Badge badgeContent={0} color="secondary">
-                <NotificationsIcon />
-              </Badge>
-            </IconButton>
-            <IconButton
-              edge="end"
-              aria-label="account of current user"
-              aria-controls={menuId}
-              aria-haspopup="true"
-              onClick={handleProfileMenuOpen}
-              color="inherit"
-            >
-              <AccountCircle />
-            </IconButton>
-          </div>
-          <div className={classes.sectionMobile}>
-            <IconButton
-              aria-label="show more"
-              aria-controls={mobileMenuId}
-              aria-haspopup="true"
-              onClick={handleMobileMenuOpen}
-              color="inherit"
-            >
-              <MoreIcon />
-            </IconButton>
-          </div>
+            
+              <div>
+                <IconButton
+                  aria-label="account of current user"
+                  aria-controls="menu-appbar"
+                  aria-haspopup="true"
+                  onClick={handleMenu}
+                  color="inherit"
+                >
+                  <AccountCircle />
+                </IconButton>
+                <Menu
+                  id="menu-appbar"
+                  anchorEl={anchorEl}
+                  anchorOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                  }}
+                  keepMounted
+                  transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                  }}
+                  open={open}
+                  onClose={() => setAnchorEl(null)}
+                >
+                  { getCookie('jwt') !== '' ? (
+                    <>
+                      <MenuItem onClick={() => handleMenuClick('/profile')}>Profile</MenuItem>
+                      <MenuItem onClick={() => handleMenuClick('/')}>My Recipes</MenuItem>
+                      <MenuItem onClick={() => logout('/')}>Logout</MenuItem>
+                    </>
+                  ): (
+                    <>
+                      <MenuItem onClick={() => handleMenuClick('/login')}>Login</MenuItem>
+                    </>
+                  ) }
+                </Menu>
+              </div>            
         </Toolbar>
       </AppBar>
-      {renderMobileMenu}
-      {renderMenu}
     </div>
   );
 }
+
+export default withRouter(Header)
