@@ -1,14 +1,10 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import { fade, makeStyles, useTheme } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
 import AccountCircle from '@material-ui/icons/AccountCircle';
-import Switch from '@material-ui/core/Switch';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import FormGroup from '@material-ui/core/FormGroup';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import { withRouter } from 'react-router-dom'
@@ -45,6 +41,27 @@ const useStyles = makeStyles((theme) => ({
       width: 'auto',
     },
   },
+  mobileSearch: {
+    position: 'relative',
+    borderRadius: theme.shape.borderRadius,
+    backgroundColor: fade(theme.palette.common.white, 0.15),
+    '&:hover': {
+      backgroundColor: fade(theme.palette.common.white, 0.25),
+    },
+    marginRight: theme.spacing(2),
+    marginLeft: 0,
+    width: '100%',
+    [theme.breakpoints.up('sm')]: {
+      marginLeft: theme.spacing(3),
+    },
+  },
+  close: {
+    float: 'right',
+    cursor: 'pointer',
+  },
+  full: {
+    width: '100%'
+  },
   searchIcon: {
     padding: theme.spacing(0, 2),
     height: '100%',
@@ -74,20 +91,14 @@ const useStyles = makeStyles((theme) => ({
 
 const Header = (props) => {
   const {userData, setUserData} = useContext(UserContext)
-
   const { history } = props
   const classes = useStyles();
-  const [auth, setAuth] = useState(true);
   const [mobileSearch, setMobileSearch] = useState(false)
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const theme = useTheme()
   //*responds true if screen size is 'sm' or smaller
   const isMobile = useMediaQuery(theme.breakpoints.down('xs'))
-
-  const handleChange = (event) => {
-    setAuth(event.target.checked);
-  };
 
   const logout = (pageURL) => {
     //on logout, sets user context to undefined and deletes the jwt from local storage
@@ -115,54 +126,71 @@ const Header = (props) => {
     setMobileSearch(!mobileSearch)
   }
 
-  useEffect( () => {
-    if(getCookie('jwt') !== ''){
-      setAuth(true)
-    }else{
-      setAuth(false)
-    }
-  }, [])
-
   return (
     <div className={classes.root}>
       <AppBar position="static">
         <Toolbar>
-            <Typography variant="h6" className={classes.title}>
-              Recipe Stache
-            </Typography>
-            <div>
-              {isMobile ? (
+          {mobileSearch ? (
+            <>
+              <div className={classes.mobileSearch}>
+                <div className={classes.searchIcon}>
+                  <SearchIcon />
+                </div>
+                <InputBase
+                  placeholder="Search…"
+                  classes={{
+                    root: classes.inputRoot,
+                    input: classes.inputInput,
+                  }}
+                  inputProps={{ 'aria-label': 'search' }}
+                />
+              </div>
+              <IconButton
+                edge="start"
+                className={classes.menuButton}
+                color="inherit"
+                aria-label="menu"
+                onClick={handleMobileSearch}
+              >
+                <CloseIcon className={classes.close}/>
+              </IconButton>
+            </>
+          ):(
+            <>
+              <Typography variant="h6" className={classes.title}>
+                Recipe Stache
+              </Typography>
+              <div>
+                {isMobile ? (
                   <>
                     <IconButton
-                    edge="start"
-                    className={classes.menuButton}
-                    color="inherit" 
-                    aria-label="menu"
+                      edge="start"
+                      className={classes.menuButton}
+                      color="inherit"
+                      aria-label="menu"
+                      onClick={handleMobileSearch}
                     >
-                        <SearchIcon onClick={handleMobileSearch} />
-                    </IconButton>
-                  </> 
+                      <SearchIcon />
+                     </IconButton>
+                  </>
                 ):(
                   <>
                     <div className={classes.search}>
-                    <div className={classes.searchIcon}>
-                      <SearchIcon />
+                      <div className={classes.searchIcon}>
+                        <SearchIcon />
+                      </div>
+                      <InputBase
+                        placeholder="Search…"
+                        classes={{
+                          root: classes.inputRoot,
+                          input: classes.inputInput,
+                        }}
+                        inputProps={{ 'aria-label': 'search' }}
+                      />
                     </div>
-                    <InputBase
-                      placeholder="Search…"
-                      classes={{
-                        root: classes.inputRoot,
-                        input: classes.inputInput,
-                      }}
-                      inputProps={{ 'aria-label': 'search' }}
-                    />
-                  </div>  
                   </>
-                )
-              }
-              
-            </div>
-            
+                )}
+              </div>
               <div>
                 <IconButton
                   aria-label="account of current user"
@@ -194,13 +222,15 @@ const Header = (props) => {
                       <MenuItem onClick={() => handleMenuClick('/')}>My Recipes</MenuItem>
                       <MenuItem onClick={() => logout('/')}>Logout</MenuItem>
                     </>
-                  ): (
+                  ):(
                     <>
                       <MenuItem onClick={() => handleMenuClick('/login')}>Login</MenuItem>
                     </>
-                  ) }
+                  )}
                 </Menu>
-              </div>            
+              </div>
+              </>
+          )}
         </Toolbar>
       </AppBar>
     </div>
