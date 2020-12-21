@@ -41,7 +41,6 @@ function App() {
     <>
       <UserContext.Provider value={ {userData, setUserData} }>
         <AppBar />
-        <Navbar />
         <Switch>
           <Route exact path='/' component={Home} />
           <Route exact path='/login' component={Login} />
