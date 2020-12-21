@@ -25,6 +25,7 @@ const useStyles = makeStyles((theme) => ({
   },
   title: {
     flexGrow: 1,
+    cursor: 'pointer',
   },
   search: {
     position: 'relative',
@@ -157,7 +158,7 @@ const Header = (props) => {
             </>
           ):(
             <>
-              <Typography variant="h6" className={classes.title}>
+              <Typography variant="h6" className={classes.title} onClick={() => handleMenuClick('/')}>
                 Recipe Stache
               </Typography>
               <div>
