@@ -1,17 +1,19 @@
 import React from 'react'
-import { Link } from "react-router-dom";
+import { useHistory } from 'react-router-dom'
+import Button from '@material-ui/core/Button'
 
 const Error = () => {
+
+    const history = useHistory()
+    const home = () => history.push('/')
+
     return (
         <>
                 <div>
-                    Error 404 page not found
+                   <h1>Uh Oh! This page is not Found!</h1>
+                   <Button variant='contained' color='primary' onClick={home}>Go Home!</Button>
                 </div>
-                <ul>
-                    <li>
-                        <Link to='/home'>Back to home page</Link>
-                    </li>
-                </ul>
+                
         </>
     )
 }
