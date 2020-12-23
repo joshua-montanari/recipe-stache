@@ -1,10 +1,15 @@
 import React from 'react'
+import NewRecipeBtn from '../../Components/NewRecipeBtn'
 
 const Home = () => {
     return (
-        <div>
-            Home page
-        </div>
+        <>
+            <div>
+                Home page
+            </div>
+            <NewRecipeBtn />
+        </>
+        
     )
 }
 
