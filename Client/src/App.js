@@ -11,6 +11,7 @@ import getCookie from './Util/GetCookie'
 import Axios from 'axios'
 import UserContext from './Context/UserContext'
 import CreateRecipe from './Pages/CreateRecipe/CreateRecipe';
+import AllRecipes from './Pages/AllRecipes/AllRecipes';
 
 function App() {
 
@@ -48,6 +49,7 @@ function App() {
           <Route exact path='/register' component={Register} />
           <Route exact path='/profile' component={Profile} />
           <Route exact path='/create-recipe' component={CreateRecipe} />
+          <Route exact path='/recipes' component={AllRecipes} />
           <Route component={Error} />
         </Switch>
       </UserContext.Provider>
