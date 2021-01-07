@@ -4,7 +4,7 @@ by: Josh and Derek
 
 Built with: React.js Node.js Express and MongoDB
 
-featuring: react hooks, Context api, axios, material, json web tokens, bcrypt
+featuring: react hooks, Context api, axios, material_ui, json web tokens, bcrypt
 
 ## Dependencies:
  ### Backend
