@@ -15,6 +15,7 @@ import UserContext from '../../Context/UserContext'
 import SearchIcon from '@material-ui/icons/Search';
 import InputBase from '@material-ui/core/InputBase';
 import CloseIcon from '@material-ui/icons/Close';
+import AddIcon from '@material-ui/icons/Add';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -173,6 +174,7 @@ const Header = (props) => {
                     >
                       <SearchIcon />
                      </IconButton>
+                     
                   </>
                 ):(
                   <>
@@ -189,9 +191,11 @@ const Header = (props) => {
                         inputProps={{ 'aria-label': 'search' }}
                       />
                     </div>
+              
                   </>
                 )}
               </div>
+              
               <div>
                 <IconButton
                   aria-label="account of current user"
