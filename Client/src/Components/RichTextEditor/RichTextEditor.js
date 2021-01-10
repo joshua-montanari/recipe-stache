@@ -46,7 +46,7 @@ const save = (data) => {
     console.log(convertFromRaw(JSON.parse(data)));
 }
 
-const RichTextEditor = ({recipeSteps, setRecipeSteps}) => {
+const RichTextEditor = ({setRecipeSteps, recipeStepsError}) => {
 
     return (
         <MuiThemeProvider theme={editorTheme}>
@@ -54,6 +54,7 @@ const RichTextEditor = ({recipeSteps, setRecipeSteps}) => {
                 label="Recipe Steps"
                 onSave={save}
                 onChange={data => setRecipeSteps(data.getCurrentContent())}
+                error={recipeStepsError}
             />
             <Box p={1} />
         </MuiThemeProvider>

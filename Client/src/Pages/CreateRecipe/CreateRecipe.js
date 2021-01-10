@@ -23,7 +23,7 @@ import Input from '../../Components/Controls/Input';
 import AsyncSelect from '../../Components/Controls/AsyncSelect';
 import { useForm, Form } from '../../Components/useForm';
 
-import { convertToRaw } from 'draft-js';
+import { convertToRaw, convertFromRaw } from 'draft-js';
 
 import getCookie from '../../Util/GetCookie';
 
@@ -51,14 +51,27 @@ const CreateRecipe = () => {
         let fieldErrors = { ...errors }
 
         if('recipeName' in fieldValues) {
-            fieldErrors.recipeName = fieldValues.recipeName ? '' : 'This field is required.'
+            fieldErrors.recipeName = fieldValues.recipeName ? '' : 'Please pick a recipe name.'
         }
         if('category' in fieldValues) {
             fieldErrors.category = fieldValues.category ? '' : 'Please pick a category.'
         }
-        if('ingredients' in fieldValues) {
-            fieldErrors.ingredients = fieldValues.ingredients ? '' : 'Please add ingredients.'
+        // if('ingredients' in fieldValues) {
+        //     fieldErrors.ingredients = fieldValues.ingredients ? '' : 'Please add ingredients.'
+        // }
+        if(ingredients.length < 1) {
+            setIngredientError({error: true, message: 'Please add ingredients.'});
         }
+        else {
+            setIngredientError({error: false, message: ''});
+        }
+        if(!recipeSteps.hasText()) {
+            setRecipeStepsError(true);
+        }
+        else {
+            setRecipeStepsError(false);
+        }
+
 
         setErrors({ ...fieldErrors });
 
@@ -76,18 +89,16 @@ const CreateRecipe = () => {
         resetForm
     } = useForm(initialValues, true, validate);
 
-    const [recipeName, setRecipeName] = useState('');
     const [recipeSteps, setRecipeSteps] = useState('');
-    const [category, setCategory] = useState('');
+    const [recipeStepsError, setRecipeStepsError] = useState(false);
     const [categories, setCategories] = useState([]);
     const [ingredientText, setIngredientText] = useState('');
     const [ingredients, setIngredients] = useState([]);
+    const [ingredientError, setIngredientError] = useState({error: false, message: ''});
     const [image, setImage] = useState('');
     const [fileName, setFileName] = useState('');
     const [resStatus, setResStatus] = useState(0);
     const [alertMessage, setAlertMessage] = useState('');
-
-    const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
 
@@ -116,23 +127,24 @@ const CreateRecipe = () => {
     }
 
     const clearForm = () => {
-        setRecipeName('');
         setRecipeSteps('');
-        setCategory('');
         setIngredientText('');
         setIngredients([]);
         setImage('');
         setFileName('');
     }
 
-    const submitForm = async () => {
+    const submitForm = async e => {
+
+        e.preventDefault();
 
         if(!validate()) { return; }
 
         const formData = new FormData();
-        formData.append('name', recipeName);
+        console.log(values);
+        formData.append('name', values.recipeName);
         formData.append('steps', JSON.stringify(convertToRaw(recipeSteps)));
-        formData.append('category', category);
+        formData.append('category', values.category);
         ingredients.forEach(ingredient => formData.append('ingredients', ingredient));
         formData.append('createdBy', getCookie('userId'));
         formData.append('file', image[0]);
@@ -141,6 +153,8 @@ const CreateRecipe = () => {
             'Content-Type': 'multipart/form-data',
             'x-auth-token': localStorage.getItem('auth-token'),
         }
+
+        console.log(formData);
 
         try{
             const response = await axios.post('http://localhost:5000/recipes', formData, { headers: headers });
@@ -166,17 +180,7 @@ const CreateRecipe = () => {
             <Paper className={classes.root}>
                 <div className={classes.formDiv}>
                     <Typography variant="h3" align="center">Create New Recipe</Typography>
-                    <form>
-                        {/* <TextField 
-                            fullWidth
-                            margin="dense"
-                            id="recipe-name" 
-                            label="Recipe Name" 
-                            variant="filled" 
-                            value={recipeName} 
-                            onChange={e => setRecipeName(e.target.value)} 
-                        /> */}
-
+                    <form onSubmit={e => submitForm(e)}>
                         <Input
                             name="recipeName"
                             label="Recipe Name"
@@ -185,7 +189,7 @@ const CreateRecipe = () => {
                             error={errors.recipeName}
                         />
 
-                        <RichTextEditor setRecipeSteps={setRecipeSteps} />
+                        <RichTextEditor setRecipeSteps={setRecipeSteps}  recipeStepsError={recipeStepsError} />
 
                         <AsyncSelect
                             name="category"
@@ -200,13 +204,19 @@ const CreateRecipe = () => {
 
                         <IngredientList ingredients={ingredients} setIngredients={setIngredients} />
 
-
                         <TextField 
                             id="ingredients" 
                             label="Add Ingredient" 
                             variant="filled" 
                             value={ingredientText} 
                             onChange={e => setIngredientText(e.target.value)}
+                            onKeyDown={e => {
+                                if (e.key === "Enter") {
+                                   addIngredient();
+                                }
+                             }}
+                            error={ingredientError.error}
+                            helperText={ingredientError.message}
                             InputProps={{
                                 endAdornment:
                                 <InputAdornment position="end">
@@ -239,7 +249,7 @@ const CreateRecipe = () => {
                         </label>
                         <Typography variant="body2">{fileName}</Typography>
                         <Box mt={2} />
-                        <Button fullWidth variant="contained" color="primary" onClick={submitForm}>Submit</Button>
+                        <Button fullWidth variant="contained" color="primary" type="submit">Submit</Button>
                     </form>
                 </div>
             </Paper>
